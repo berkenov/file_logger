@@ -87,7 +87,7 @@ class FileLogger {
         final name = file.path.split('\\').last;
         final date = name.split('.').first;
         final fileDate = DateTime.parse(date);
-        return now.difference(fileDate).inMinutes > timeDuration.inMinutes;
+        return now.difference(fileDate).inDays > timeDuration.inDays;
       });
       for (var file in olderFiles) {
         await file.delete();
