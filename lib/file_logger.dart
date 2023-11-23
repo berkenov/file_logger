@@ -83,8 +83,12 @@ class FileLogger {
       final timeDuration = duration ?? const Duration(days: 7);
       final files = await getLogsFiles();
       final now = DateTime.now();
-      final olderFiles = files
-          .where((file) => now.difference(file.lastModifiedSync()).inDays > timeDuration.inDays);
+      final olderFiles = files.where((file) {
+        final name = file.path.split('\\').last;
+        final date = name.split('.').first;
+        final fileDate = DateTime.parse(date);
+        return now.difference(fileDate).inMinutes > timeDuration.inMinutes;
+      });
       for (var file in olderFiles) {
         await file.delete();
         debugPrint('Лог файл удален: ${file.path}');
