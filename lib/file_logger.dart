@@ -86,9 +86,11 @@ class FileLogger {
       final olderFiles = files.where((file) {
         final name = file.path.split('\\').last;
         final date = name.split('.').first;
-        final fileDate = DateTime.parse(date);
-        return now.difference(fileDate).inDays > timeDuration.inDays;
-      });
+        final fileDate = DateFormat('dd-MM-yyyy').parse(date);
+        final result = now.difference(fileDate).inDays > timeDuration.inDays;
+        return result;
+      }).toList();
+
       for (var file in olderFiles) {
         await file.delete();
         debugPrint('Лог файл удален: ${file.path}');
