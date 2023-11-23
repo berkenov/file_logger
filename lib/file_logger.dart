@@ -77,4 +77,20 @@ class FileLogger {
       debugPrint('Ошибка при удалении лог файлов: $e');
     }
   }
+
+  static Future<void> deleteOlderLogFiles(Duration? duration) async {
+    try {
+      final timeDuration = duration ?? const Duration(days: 7);
+      final files = await getLogsFiles();
+      final now = DateTime.now();
+      final olderFiles = files
+          .where((file) => now.difference(file.lastModifiedSync()).inDays > timeDuration.inDays);
+      for (var file in olderFiles) {
+        await file.delete();
+        debugPrint('Лог файл удален: ${file.path}');
+      }
+    } catch (e) {
+      debugPrint('Ошибка при удалении лог файлов: $e');
+    }
+  }
 }
